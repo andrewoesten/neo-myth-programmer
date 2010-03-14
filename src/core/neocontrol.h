@@ -35,9 +35,11 @@ class neocontrol
     neodriver*neodrv;
     char inbuffer[64],outbuffer[64];
     char cartid[64];
+    int cartType;
+    int menuType;
+    int flashType;
     const menu_info*minfo;
     const flash_info*finfo;
-    int cartType;
     progress_indicator*prg;
     int sync0();
     int sync1();

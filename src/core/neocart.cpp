@@ -531,6 +531,7 @@ int neocart::addrom(const char*name,void*data,int fs)
     }
     else
     {
+        const int blocksize=neoctrl->getsize(neo_flash,block_size);
         for(int i=0;i<numbblocks;i++)
         {
             if(bblocks[i]!=0)
@@ -679,15 +680,14 @@ int neocart::addrom(const char*name,void*data,int fs)
         gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;
 #ifdef use_n64_plugin
         {
+            SN64PLUG_Begin();
 #if 0
             membuf romcopy;
             check(romcopy.resize(fs));
             memcpy(romcopy,gSelections[gMaxEntry].romdata,fs);
 
-            SN64PLUG_Begin();
             if(SN64PLUG_ProcessImage(getFileName(name),(char*)(romcopy),fs))
 #else
-            SN64PLUG_Begin();
             if(SN64PLUG_ProcessImage(getFileName(name),(char*)(gSelections[gMaxEntry].romdata),fs))
 #endif
             {
@@ -927,7 +927,7 @@ int neocart::backuprom(char*name)
 int neocart::backuprom(int romid,char*fname)
 {
     if(state!=state_ready)return 0;
-    const int blocksize=neoctrl->getsize(neo_flash,ideal_block_size);
+    const int blocksize=neoctrl->getsize(neo_flash,block_size);
     for(int i=0;i<gMaxEntry;i++)
     {
         if(gSelections[i].id==romid&&gSelections[i].length>0)
