@@ -528,7 +528,8 @@ int neocontrol::open(neodriver*driver)
     {
         return 0;
     }
-    store_word_le((WORD)(i+1),cartid+0x32);
+    menuType=i+1;
+    store_word_le((WORD)menuType,cartid+0x32);
 
     check(w_cmd0(neocontrolcodes[33].code,neocontrolcodes[33].size));
     check(r_res0(outbuffer,0x10));
@@ -551,7 +552,8 @@ int neocontrol::open(neodriver*driver)
     {
         return 0;
     }
-    store_word_le((WORD)(i+1),cartid+0x34);
+    flashType=i+1;
+    store_word_le((WORD)flashType,cartid+0x34);
 
     state=state_ready;
 //menu reading (wtf?)
@@ -931,16 +933,20 @@ DWORD neocontrol::getsize(DWORD param,DWORD bs)
     }
     if(bs==ideal_block_size)
     {
-        DWORD nDies=0;
         if(param==neo_flash)
         {
-            nDies=finfo->nDies;
+            DWORD nDies=finfo->nDies;
             if(nDies>=4)
             {
                 nDies=2;
             }
+            if(flashType==9)//update needed whenever flash_infos are updated
+            {
+                nDies=2;
+            }
+            return (nDies?nDies:1)*getsize(param,block_size);
         }
-        return (nDies?nDies:1)*getsize(param,block_size);
+        return getsize(param,block_size);
     }
     return 0;
 }
