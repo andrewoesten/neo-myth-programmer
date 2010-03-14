@@ -108,7 +108,7 @@ NEON64_SaveType DB_GetSaveType()
     UTIL_StringAppend(chunkBuffer,MD5CodeBuffer);
     UTIL_StringAppend(chunkBuffer,".sn64plug\0");
 
-   //printf("DBF = %s\n",chunkBuffer);
+    //printf("DBF = %s\n",chunkBuffer);
 
     IO_BindHandle(&dbh);
 
