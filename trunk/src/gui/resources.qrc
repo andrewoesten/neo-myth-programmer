@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/Sonic_1991.png</file>
+        <file>pics/Sonic_1991.ico</file>
+    </qresource>
+</RCC>
