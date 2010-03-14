@@ -677,7 +677,7 @@ int neocart::addrom(const char*name,void*data,int fs)
         gSelections[gMaxEntry].run=0;
         gSelections[gMaxEntry].n64_cic=0;
         gSelections[gMaxEntry].n64_saveType=0;
-        gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;
+        gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;
 #ifdef use_n64_plugin
         {
             SN64PLUG_Begin();
@@ -1324,9 +1324,9 @@ int neocart::burn()
         const int n64offset=31*64*KB;
         memset(neomenu+n64offset,0,64*KB);
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
-        //neomenu[2*MB-16+0]=0;
-        //neomenu[2*MB-16+1]=0;
-        //neomenu[2*MB-16+5]=0x14;
+        neomenu[2*MB-16+0]=1;
+        neomenu[2*MB-16+1]=1;
+        neomenu[2*MB-16+5]=0x14;
         for(int i=0;i<gMaxEntry;i++)
         {
             if(gSelections[i].type==5&&gSelections[i].deleted==0)
