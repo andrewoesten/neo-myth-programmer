@@ -679,12 +679,12 @@ int neocart::addrom(const char*name,void*data,int fs)
         gSelections[gMaxEntry].n64_saveType=0;
         if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
         {
-	        gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;
-		}
-		else
-		{
-	        gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;
-		}
+            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;
+        }
+        else
+        {
+            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;
+        }
 #ifdef use_n64_plugin
         {
             SN64PLUG_Begin();
@@ -1327,20 +1327,73 @@ int neocart::burn()
     }
     if(writen64)
     {
+        int addFakeEntry=0;
+        int n64count=0;
+        selEntry*gSelection=0,*gs;
+        for(int i=0;(gs=getrominfo(i));i++)
+        {
+            if(gs->type==5)
+            {
+                gSelection=gs;
+                n64count++;
+            }
+        }
+        if(n64count==1)
+        {
+            if(gSelection->offset==0)
+            {
+                addFakeEntry=1;
+            }
+            else
+            {
+                printf("one n64rom at non-zero offset will not boot.\neither delete \"%s\" rom, or add another n64 rom.\n",gSelection->name);
+            }
+        }
         subprg->incWork(64*KB);
         const int n64offset=31*64*KB;
         memset(neomenu+n64offset,0,64*KB);
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
         if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
         {
-        	neomenu[2*MB-16+0]=0;
-        	neomenu[2*MB-16+1]=0;
-		}
-		else
+            neomenu[2*MB-16+0]=0;
+            neomenu[2*MB-16+1]=0;
+            neomenu[2*MB-16+5]=0x01;
+        }
+        else
         {
-        	neomenu[2*MB-16+0]=1;
-        	neomenu[2*MB-16+1]=1;
-		}
+            neomenu[2*MB-16+0]=1;
+            neomenu[2*MB-16+1]=1;
+            //neomenu[2*MB-16+5]=0?;
+        }
+        if(addFakeEntry)
+        {
+            BYTE*val=(BYTE*)(&neomenu[2*MB-16+4]);
+            val[0]=2;
+            if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
+            {
+                val[1]=0x12;
+            }
+            else
+            {
+                val[1]=0x14;
+            }
+            val=(BYTE*)(&neomenu[0x1fc840]);
+            val[0]=0xff;
+            val[1]=0x05;
+            const short int n64_tbl[16]={0,0,0,0,0,0,1,2,4,8,16,32,64,128,256,512};
+            int size=0x0c;
+            for(int j=0;j<16;j++)
+            {
+                if(n64_tbl[j]>=((32*MB)/(128*KB)))
+                {
+                    size=j;
+                    break;
+                }
+            }
+            val[2]=_2byte(size<<4);
+            val[3]=0x80;
+            memcpy(val+0x0c,"For great justice!",19);
+        }
         for(int i=0;i<gMaxEntry;i++)
         {
             if(gSelections[i].type==5&&gSelections[i].deleted==0)
