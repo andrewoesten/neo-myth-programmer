@@ -679,11 +679,12 @@ int neocart::addrom(const char*name,void*data,int fs)
         gSelections[gMaxEntry].n64_saveType=0;
         if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
         {
-            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;
+            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;//[magic]0x1ffff5
+            //gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;//[magic]0x1ffff5
         }
         else
         {
-            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;
+            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;//[magic]0x1ffff5
         }
 #ifdef use_n64_plugin
         {
@@ -1355,15 +1356,15 @@ int neocart::burn()
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
         if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
         {
-            neomenu[2*MB-16+0]=0;
-            neomenu[2*MB-16+1]=0;
-            neomenu[2*MB-16+5]=0x01;
+            neomenu[2*MB-16+0]=0;//[magic]0x1ffff0
+            neomenu[2*MB-16+1]=0;//[magic]0x1ffff1
+            //neomenu[2*MB-16+5]=0x01;//[magic]0x1ffff5
         }
         else
         {
-            neomenu[2*MB-16+0]=1;
-            neomenu[2*MB-16+1]=1;
-            //neomenu[2*MB-16+5]=0?;
+            neomenu[2*MB-16+0]=1;//[magic]0x1ffff0
+            neomenu[2*MB-16+1]=1;//[magic]0x1ffff1
+            //neomenu[2*MB-16+5]=0?;//[magic]0x1ffff5
         }
         if(addFakeEntry)
         {
@@ -1371,11 +1372,12 @@ int neocart::burn()
             val[0]=2;
             if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
             {
-                val[1]=0x12;
+                val[1]=0x14;//[magic]0x1ffff5
+                //val[1]=0x12;//[magic]0x1ffff5
             }
             else
             {
-                val[1]=0x14;
+                val[1]=0x14;//[magic]0x1ffff5
             }
             val=(BYTE*)(&neomenu[0x1fc840]);
             val[0]=0xff;

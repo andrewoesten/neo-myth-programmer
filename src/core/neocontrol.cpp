@@ -659,7 +659,7 @@ int neocontrol::read(DWORD param,DWORD offset,void*lpOutBuffer,DWORD nOutBufferS
 //        check(r_res3(lpOutBuffer,0,offset,nOutBufferSize));
 //        return 1;
     }
-    if(cartType==n64myth_cart)
+    //if(cartType==n64myth_cart)
     {
         if(param==neo_n64menu)
         {
@@ -810,7 +810,7 @@ int neocontrol::write(DWORD param,DWORD offset,const void*lpInBuffer,DWORD nInBu
     {
         //later
     }
-    if(cartType==n64myth_cart)
+    //if(cartType==n64myth_cart)
     {
         if(param==neo_n64menu)
         {
@@ -861,7 +861,7 @@ DWORD neocontrol::getsize(DWORD param,DWORD bs)
         if(param==neo_psram)
         {
         }
-        if(cartType==n64myth_cart)
+        //if(cartType==n64myth_cart)
         {
             if(param==neo_n64menu)
             {
@@ -890,7 +890,7 @@ DWORD neocontrol::getsize(DWORD param,DWORD bs)
         if(param==neo_psram)
         {
         }
-        if(cartType==n64myth_cart)
+        //if(cartType==n64myth_cart)
         {
             if(param==neo_n64menu)
             {
@@ -919,7 +919,7 @@ DWORD neocontrol::getsize(DWORD param,DWORD bs)
         if(param==neo_psram)
         {
         }
-        if(cartType==n64myth_cart)
+        //if(cartType==n64myth_cart)
         {
             if(param==neo_n64menu)
             {
