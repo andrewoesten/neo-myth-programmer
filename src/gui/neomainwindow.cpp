@@ -816,6 +816,22 @@ void neoMainWindow::on_burnButton_clicked()
     }
     if(!workerThread.isRunning())
     {
+        int n64count=0;
+        selEntry*gSelection=0,*gs;
+        for(int i=0;gs=ncart->getrominfo(i);i++)
+        {
+            if(gs->type==5)
+            {
+                gSelection=gs;
+                n64count++;
+            }
+        }
+        if(n64count==1&&gSelection->offset!=0)
+        {
+            qtui_MessageBox(tr("one n64rom at non-zero offset will not boot.\neither delete \"")+QString(gSelection->name)+tr("\" rom, or add another n64 rom."));
+            return;
+        }
+
         enableActions(0);
 
         ui->pauseButton->setEnabled(true);

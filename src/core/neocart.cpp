@@ -1326,7 +1326,7 @@ int neocart::burn()
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
         neomenu[2*MB-16+0]=1;
         neomenu[2*MB-16+1]=1;
-        neomenu[2*MB-16+5]=0x14;
+        //neomenu[2*MB-16+5]=0x14;
         for(int i=0;i<gMaxEntry;i++)
         {
             if(gSelections[i].type==5&&gSelections[i].deleted==0)
