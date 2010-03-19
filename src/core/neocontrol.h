@@ -65,6 +65,7 @@ public:
     int read(DWORD param,DWORD offset,void*lpOutBuffer,DWORD nOutBufferSize);
     int write(DWORD param,DWORD offset,const void*lpInBuffer,DWORD nInBufferSize);
     DWORD getsize(DWORD param,DWORD bs);
+    int getFlashAsicType();
     void close();
 };
 

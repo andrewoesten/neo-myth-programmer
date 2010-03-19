@@ -677,15 +677,7 @@ int neocart::addrom(const char*name,void*data,int fs)
         gSelections[gMaxEntry].run=0;
         gSelections[gMaxEntry].n64_cic=0;
         gSelections[gMaxEntry].n64_saveType=0;
-        if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
-        {
-            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;//[magic]0x1ffff5
-            //gSelections[gMaxEntry].n64_modeA=offset==0?0:0x12;//[magic]0x1ffff5
-        }
-        else
-        {
-            gSelections[gMaxEntry].n64_modeA=offset==0?0:0x14;//[magic]0x1ffff5
-        }
+        gSelections[gMaxEntry].n64_modeA=0;
 #ifdef use_n64_plugin
         {
             SN64PLUG_Begin();
@@ -1343,7 +1335,7 @@ int neocart::burn()
         {
             if(gSelection->offset==0)
             {
-                addFakeEntry=1;
+                //addFakeEntry=1;
             }
             else
             {
@@ -1354,31 +1346,20 @@ int neocart::burn()
         const int n64offset=31*64*KB;
         memset(neomenu+n64offset,0,64*KB);
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
-        if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
+        int ft=neoctrl->getFlashAsicType();
+        if(ft==0)
         {
-            neomenu[2*MB-16+0]=0;//[magic]0x1ffff0
-            neomenu[2*MB-16+1]=0;//[magic]0x1ffff1
-            //neomenu[2*MB-16+5]=0x01;//[magic]0x1ffff5
+            printf("warning: unknown flash type, n64 toms will not boot\n");
+            ft=1;
         }
-        else
-        {
-            neomenu[2*MB-16+0]=1;//[magic]0x1ffff0
-            neomenu[2*MB-16+1]=1;//[magic]0x1ffff1
-            //neomenu[2*MB-16+5]=0?;//[magic]0x1ffff5
-        }
+        ft--;
+        neomenu[2*MB-16+0]=_2byte(ft);
+        neomenu[2*MB-16+1]=_2byte(ft);
+        neomenu[2*MB-16+5]=(n64count==2)?0x14:0;
         if(addFakeEntry)
         {
             BYTE*val=(BYTE*)(&neomenu[2*MB-16+4]);
             val[0]=2;
-            if(neoctrl->getsize(neo_menu,total_size)>(2*MB))
-            {
-                val[1]=0x14;//[magic]0x1ffff5
-                //val[1]=0x12;//[magic]0x1ffff5
-            }
-            else
-            {
-                val[1]=0x14;//[magic]0x1ffff5
-            }
             val=(BYTE*)(&neomenu[0x1fc840]);
             val[0]=0xff;
             val[1]=0x05;
@@ -1402,7 +1383,7 @@ int neocart::burn()
             {
                 BYTE*val=(BYTE*)(gSelections[i].offset==0?&neomenu[2*MB-16+2]:&neomenu[2*MB-16+4]);
                 val[0]=_2byte((gSelections[i].n64_cic&0xf)|((gSelections[i].n64_saveType<<4)&0xf0));
-                val[1]=_2byte(gSelections[i].n64_modeA);
+                neomenu[2*MB-16+3]|=_2byte((gSelections[i].offset==0)?gSelections[i].n64_modeA:(gSelections[i].n64_modeA<<4));
                 val=(BYTE*)(gSelections[i].offset==0?&neomenu[0x1fc800]:&neomenu[0x1fc840]);
                 val[0]=0xff;
                 val[1]=0x05;
