@@ -953,6 +953,29 @@ DWORD neocontrol::getsize(DWORD param,DWORD bs)
 
 // #########################################################################
 
+int neocontrol::getFlashAsicType()
+{
+    if(state!=state_ready)return 0;
+    if(finfo->write2select_flash.size>0x47)
+    {
+        if(memcmp(finfo->write2select_flash.code+0x44,"\x00\xda\xae\x44",4)==0)
+        {
+            return 1;
+        }
+        if(memcmp(finfo->write2select_flash.code+0x44,"\x00\xda\x8e\x44",4)==0)
+        {
+            return 2;
+        }
+        if(memcmp(finfo->write2select_flash.code+0x44,"\x00\xda\x0e\x44",4)==0)
+        {
+            return 3;
+        }
+    }
+    return 0;
+}
+
+// #########################################################################
+
 void neocontrol::close()
 {
     if(state==state_undefined)return;
