@@ -182,7 +182,7 @@ void addRomInfo(QStandardItemModel*model_flash,selEntry*gSelection)
     model_flash->setData(model_flash->index(0,size_flash),print_size_128KB(gSelection->length));
     if(gSelection->bsize)
     {
-        sprintf(buffer,"0x%.5x",gSelection->bbank*save_block_size);
+        sprintf(buffer,"0x%.5x",gSelection->bbank*gSelection->bsize*save_block_size);
         model_flash->setData(model_flash->index(0,sramoffset_flash),buffer);
         model_flash->setData(model_flash->index(0,sramsize_flash),print_size(gSelection->bsize*save_block_size));
     }
@@ -224,7 +224,7 @@ void addSramInfo(QStandardItemModel*model_sram,selEntry*gSelection)
         model_sram->insertRow(0);
         model_sram->setData(model_sram->index(0,id_sram),gSelection->id);
         model_sram->setData(model_sram->index(0,filename_sram),gSelection->name);
-        sprintf(buffer,"0x%.5x",gSelection->bbank*save_block_size);
+        sprintf(buffer,"0x%.5x",gSelection->bbank*gSelection->bsize*save_block_size);
         model_sram->setData(model_sram->index(0,sramoffset_sram),buffer);
         model_sram->setData(model_sram->index(0,sramsize_sram),print_size(gSelection->bsize*save_block_size));
         QStandardItem*item;

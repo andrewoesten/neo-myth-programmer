@@ -270,10 +270,10 @@ int neocart::open(neocontrol*nc)
         {
             if(gSelections[i].type==5)
             {
-                BYTE*val=(BYTE*)(gSelections[i].offset==0?&neomenu[0x1ffff2]:&neomenu[0x1ffff4]);
-                gSelections[i].n64_cic=val[0]&0x0f;
+                BYTE*val=(BYTE*)((gSelections[i].offset==0)?&neomenu[0x1ffff2]:&neomenu[0x1ffff4]);
+                gSelections[i].n64_cic=val[0]&0xf;
                 gSelections[i].n64_saveType=val[0]/16;
-                gSelections[i].n64_modeA=val[1];
+                gSelections[i].n64_modeA=((gSelections[i].offset==0)?(neomenu[0x1ffff3]&0xf):(neomenu[0x1ffff3]/16));
             }
         }
     }
@@ -681,7 +681,7 @@ int neocart::addrom(const char*name,void*data,int fs)
 #ifdef use_n64_plugin
         {
             SN64PLUG_Begin();
-#if 0
+#if 1
             membuf romcopy;
             check(romcopy.resize(fs));
             memcpy(romcopy,gSelections[gMaxEntry].romdata,fs);
@@ -1085,10 +1085,11 @@ int neocart::linksram(int romid,void*data,int ss)
     }
     else
     {
+        /*change this when menu is updated*/const int total_sram_size=(int)((bsize*save_block_size>=(128*KB))?neoctrl->getsize(neo_sram,total_size):Min(neoctrl->getsize(neo_sram,total_size),128*KB));
         int sbank=-1;
         for(int b=0;b<16;b++)
         {
-            if(((b+1)*bsize*save_block_size)>(int)neoctrl->getsize(neo_sram,total_size))
+            if(((b+1)*bsize*save_block_size)>total_sram_size)
             {
                 break;
             }

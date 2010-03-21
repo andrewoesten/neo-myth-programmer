@@ -153,7 +153,7 @@ int neosram::read(void*data,int offset,int size)
         return 0;
     }
     int b0=offset/banksize;
-    int b1=((offset+size)/banksize)+1;
+    int b1=((offset+size-1)/banksize)+1;
     for(int i=b0;i<b1;i++)
     {
         check(readbank(i));
@@ -172,7 +172,7 @@ int neosram::write(void*data,int offset,int size)
         return 0;
     }
     int b0=offset/banksize;
-    int b1=((offset+size)/banksize)+1;
+    int b1=((offset+size-1)/banksize)+1;
     for(int i=b0;i<b1;i++)
     {
         check(readbank(i));
