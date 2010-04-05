@@ -1085,7 +1085,7 @@ int neocart::linksram(int romid,void*data,int ss)
     }
     else
     {
-        /*change this when menu is updated*/const int total_sram_size=(int)((bsize*save_block_size>=(128*KB))?neoctrl->getsize(neo_sram,total_size):Min(neoctrl->getsize(neo_sram,total_size),128*KB));
+        const int total_sram_size=(int)(neoctrl->getsize(neo_sram,total_size));
         int sbank=-1;
         for(int b=0;b<16;b++)
         {

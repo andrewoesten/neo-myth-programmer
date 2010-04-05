@@ -1048,7 +1048,7 @@ int getSaveSize(int romtype,void*data,int size,int&even)
     }
     if(romtype==scd_bram||romtype==scd_bios_bram)
     {
-        return 128*KB;
+        return 64*KB;
     }
     if(romtype==sms_rom)
     {
