@@ -1303,6 +1303,16 @@ int neocart::burn()
     subprg->reset();
     int retval=0;
     printf("\t\twriting\tmenu\n");
+    int flashType=neoctrl->getFlashAsicType();
+    if(flashType==0)
+    {
+        printf("warning: unknown flash type, n64 toms will not boot\n");
+        flashType=1;
+    }
+    flashType--;
+    neomenu[0xfff0+0]=_2byte(flashType);
+    neomenu[0xfff0+1]=_2byte(flashType);
+
     if(neoctrl->write(neo_menu,0,neomenu,menu_size))
     {
         //DWORD fs;
@@ -1347,15 +1357,8 @@ int neocart::burn()
         const int n64offset=31*64*KB;
         memset(neomenu+n64offset,0,64*KB);
         memcpy(neomenu+2*MB-32,"\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6\xf6",16);
-        int ft=neoctrl->getFlashAsicType();
-        if(ft==0)
-        {
-            printf("warning: unknown flash type, n64 toms will not boot\n");
-            ft=1;
-        }
-        ft--;
-        neomenu[2*MB-16+0]=_2byte(ft);
-        neomenu[2*MB-16+1]=_2byte(ft);
+        neomenu[2*MB-16+0]=_2byte(flashType);
+        neomenu[2*MB-16+1]=_2byte(flashType);
         neomenu[2*MB-16+5]=(n64count==2)?0x14:0;
         if(addFakeEntry)
         {
