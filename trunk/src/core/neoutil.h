@@ -8,6 +8,7 @@
 #include <windows.h>
 #else
 #include <unistd.h>
+#include <errno.h>
 #if 1//have stdint
 #include <stdint.h>
 typedef uint32_t DWORD;
