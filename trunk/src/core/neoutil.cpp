@@ -142,6 +142,24 @@ int file_exists(const char*FileName)
 
 // #########################################################################
 
+#ifndef WIN32
+void Sleep(DWORD msec)
+{
+    timespec req,rem;
+    rem.tv_sec=msec/1000;
+    rem.tv_nsec=(msec%1000)*1000000;
+    int res=EINTR;
+    while(res==EINTR)
+    {
+        memcpy(&req,&rem,sizeof(rem));
+        memset(&rem,0,sizeof(rem));
+        res=nanosleep(&req,&rem);
+    }
+}
+#endif
+
+// #########################################################################
+
 membuf::membuf()
 {
     data=0;
