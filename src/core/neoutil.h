@@ -8,7 +8,6 @@
 #include <windows.h>
 #else
 #include <unistd.h>
-#define Sleep usleep
 #if 1//have stdint
 #include <stdint.h>
 typedef uint32_t DWORD;
@@ -134,6 +133,9 @@ void setoption(int option,void*data);
 int SaveFile(const char*FileName,char*X,DWORD fs);
 void LoadFile(const char*FileName,char*X,DWORD&fs);
 void LoadFile(const char*FileName,membuf&X,DWORD&fs);
+#ifndef WIN32
+void Sleep(DWORD msec);
+#endif
 int file_exists(const char*FileName);
 int atoiX(char*str,int ibase,int&err);
 void load_word_le(void*dv,WORD&x);
