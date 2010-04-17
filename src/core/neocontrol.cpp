@@ -635,7 +635,11 @@ int neocontrol::read(DWORD param,DWORD offset,void*lpOutBuffer,DWORD nOutBufferS
     if(param==neo_sram)
     {
         int res=0;
-        check(w_cmd0(minfo->write2select_menu.code,minfo->write2select_menu.size));
+//        check(w_cmd0(minfo->write2select_menu.code,minfo->write2select_menu.size));
+        membuf fcmd;
+        check(setFlashBankRead(fcmd,finfo,0));
+        check(w_cmd0(fcmd,finfo->write2select_flash.size));
+
         DWORD bank=offset/getsize(neo_sram,bank_size);
         DWORD bank_count=nOutBufferSize/getsize(neo_sram,bank_size);
         char*buff=(char*)lpOutBuffer;
@@ -789,7 +793,11 @@ int neocontrol::write(DWORD param,DWORD offset,const void*lpInBuffer,DWORD nInBu
         int res=0;
         check(sync0());
         //check(w_cmd0(neocontrolcodes[24].code,neocontrolcodes[24].size));
-        check(w_cmd0(minfo->write2select_menu.code,minfo->write2select_menu.size));
+//        check(w_cmd0(minfo->write2select_menu.code,minfo->write2select_menu.size));
+        membuf fcmd;
+        check(setFlashBankRead(fcmd,finfo,0));
+        check(w_cmd0(fcmd,finfo->write2select_flash.size));
+
         DWORD bank=offset/getsize(neo_sram,bank_size);
         DWORD bank_count=nInBufferSize/getsize(neo_sram,bank_size);
         char*buff=(char*)lpInBuffer;
